@@ -1,0 +1,61 @@
+ var border_color = "#C2C2C2"; 
+		/* Valitation form */
+	  $("#cus").submit(function(e){
+	      $("#quoteButton"). prop('disabled', true);
+		  e.preventDefault(); 
+	      proceed = true;
+		 
+		 //simple input validation
+	     $($(this).find("#fullname, #bname, #btype, #city, #phone, #email")).each(function(){
+             
+		 if(!$.trim($(this).val())){   $(this).css('border-bottom','1px solid red');  proceed = false; } 
+			
+       								
+		 if ($("#fullname").val() =="") { $("#fullname").css('border-color','red');  proceed = false; } 
+		 if ($("#bname").val() =="") { $("#bname").css('border-color','red'); proceed = false; }
+		 if ($("#btype").val() =="") { $("#btype").css('border-color','red'); proceed = false; }
+		 if ($("#city").val() =="") { $("#city").css('border-color','red'); proceed = false; }
+		 if ($("#phone").val() =="") { $("#phone").css('border-color','red'); proceed = false; }
+		 if ($("#email").val() =="") { $("#email").css('border-color','red'); proceed = false; }
+		 
+		
+		 }).on("input", function(){ 
+			 $(this).css('border-color', border_color);
+		 });  
+		 
+		 
+		 if(proceed){ 
+		 $('#loadingmsg').show(); 
+		   var post_url1 = $(this).attr("action"); 
+		   var request_method1 = $(this).attr("method"); //get form GET/POST method
+			var form_data1 = new FormData(this); //Creates new FormData object
+			
+			$.ajax({ 
+				url : post_url1,
+				type: request_method1,
+				data : form_data1,
+				dataType: 'html',
+                contentType: false,
+			    cache: false,
+			    processData:false				
+		    
+			})
+			.done(function(data){
+			$('#loadingmsg').hide();	
+			$("#cus")[0].reset();
+			$("#quoteButton"). prop('disabled', false);
+			$('#dynamic-content').html('');    
+			$('#dynamic-content').html(data); // load response 
+				
+		})
+		.fail(function(){
+			$('#loadingmsg').hide();
+			$("#quoteButton"). prop('disabled', false);
+			$('#dynamic-content').html('<div class="alert alert-info fade in"> <a href="#" class="close" data-dismiss="alert">&times;</a> Something went wrong, Please try again...</div>');
+			
+		});
+	      }
+		  
+		    
+		
+	   });
